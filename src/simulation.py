@@ -31,17 +31,20 @@ class Simulation:
             self.plot()
     
     def plot(self):
+        self.ax.cla()
         history = np.array(self.history)
-        self.figure.clf()
         self.ax.plot(history[:, 0], history[:, 1])
         self.ax.axis('equal')
+        self.ax.set_xlim(-10, 10)
+        self.ax.set_ylim(-10, 10)
         self.ax.set_xlabel('x')
         self.ax.set_ylabel('y')
         self.ax.set_title('Robot Trajectory')
         self.ax.legend(['Trajectory'])
         self.plot_body()
+        #plt.show()
         plt.draw()
-        plt.pause(0.01)
+        plt.pause(0.1)
 
     def plot_body(self):
         # Define the vertices of an equilateral triangle
@@ -49,9 +52,9 @@ class Simulation:
         height = np.sqrt(3) / 2 * side_length  # Height of the equilateral triangle
         # Vertices of the equilateral triangle
         vertices = np.array([
-            [0, 0],  # First vertex at origin
-            [side_length, 0],  # Second vertex
-            [side_length / 2, height]  # Third vertex
+            [-side_length/2, -height/3],  # First vertex at origin
+            [side_length/2, -height/3],  # Second vertex
+            [0, 2*height/3]  # Third vertex
         ])
 
         # Calculate transformed vertices
@@ -60,10 +63,10 @@ class Simulation:
             [np.cos(theta), -np.sin(theta)],
             [np.sin(theta), np.cos(theta)]
         ])
-        transformed_vertices = vertices @ R.T + np.array([[self.robot.x, self.robot.y]])
+        transformed_vertices = 10 * vertices @ R.T + np.array([[self.robot.x, self.robot.y]])
 
         # Close the triangle by adding the first vertex at the end
-        triangle = np.vstack([vertices, vertices[0]])
+        triangle = np.vstack([transformed_vertices, transformed_vertices[0]])
         self.ax.plot(triangle[:, 0], triangle[:, 1], 'bo-', linewidth=2) 
         self.ax.fill(triangle[:, 0], triangle[:, 1], 'skyblue', alpha=0.5)
         self.ax.grid(True)
