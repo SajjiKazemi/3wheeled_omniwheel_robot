@@ -8,8 +8,9 @@ class Simulation:
         self.dt = 0.1
         self.time = 0
         self.history = []
-        self.figure = plt.figure()
-        self.ax = self.figure.add_subplot(111)
+        self.trajectory_fig = plt.figure()
+        self.trajectory_ax = self.trajectory_fig.add_subplot(111)
+        self.param_fig, self.param_axs = plt.subplots(3, 1, figsize=(8, 12))     
         self.run = False
 
     
@@ -37,16 +38,37 @@ class Simulation:
     def plot(self, window_size):
         axis_lower_lim = window_size[0]
         axis_upper_lim = window_size[1]
-        self.ax.cla()
+        self.trajectory_ax.cla()
         history = np.array(self.history)
-        self.ax.plot(history[:, 0], history[:, 1], linewidth=2, color='red')
-        self.ax.set_xlim(axis_lower_lim, axis_upper_lim)
-        self.ax.set_ylim(axis_lower_lim, axis_upper_lim)
-        #self.ax.axis('equal')
-        self.ax.set_xlabel('x')
-        self.ax.set_ylabel('y')
-        self.ax.set_title('Robot Trajectory')
-        self.ax.legend(['Trajectory'])
+        self.trajectory_ax.plot(history[:, 0], history[:, 1], linewidth=2, color='red')
+        self.trajectory_ax.set_xlim(axis_lower_lim, axis_upper_lim)
+        self.trajectory_ax.set_ylim(axis_lower_lim, axis_upper_lim)
+        self.trajectory_ax.set_xlabel('x')
+        self.trajectory_ax.set_ylabel('y')
+        self.trajectory_ax.set_title('Robot Trajectory')
+        self.trajectory_ax.legend(['Trajectory'])
+
+        self.param_axs[0].cla()
+        self.param_axs[0].plot(history[:, 0], linewidth=2, color='red')
+        self.param_axs[0].set_xlabel('Time')
+        self.param_axs[0].set_ylabel('x')
+        self.param_axs[0].set_title('x vs Time')
+        self.param_axs[0].legend(['x'])
+
+        self.param_axs[1].cla()
+        self.param_axs[1].plot(history[:, 1], linewidth=2, color='blue')
+        self.param_axs[1].set_xlabel('Time')
+        self.param_axs[1].set_ylabel('y')
+        self.param_axs[1].set_title('y vs Time')
+        self.param_axs[1].legend(['y'])
+
+        self.param_axs[2].cla()
+        self.param_axs[2].plot(history[:, 2], linewidth=2, color='green')
+        self.param_axs[2].set_xlabel('Time')
+        self.param_axs[2].set_ylabel('theta')
+        self.param_axs[2].set_title('theta vs Time')
+        self.param_axs[2].legend(['theta'])
+
         self.plot_body()
         #plt.show()
         plt.draw()
@@ -75,11 +97,14 @@ class Simulation:
 
         # Close the triangle by adding the first vertex at the end
         triangle = np.vstack([transformed_vertices, transformed_vertices[0]])
-        self.ax.plot(transformed_centre[0,0], transformed_centre[0,1], 'ro')
-        self.ax.plot(triangle[:, 0], triangle[:, 1], 'bo-', linewidth=2) 
-        self.ax.fill(triangle[:, 0], triangle[:, 1], 'skyblue', alpha=0.5)
-        self.ax.grid(True)
+        self.trajectory_ax.plot(transformed_centre[0,0], transformed_centre[0,1], 'ro')
+        self.trajectory_ax.plot(triangle[:, 0], triangle[:, 1], 'bo-', linewidth=2) 
+        self.trajectory_ax.fill(triangle[:, 0], triangle[:, 1], 'skyblue', alpha=0.5)
+        self.trajectory_ax.grid(True)
 
+    def save(self, filename='trajectory.png'):
+        self.trajectory_fig.savefig(filename)
+        self.param_fig.savefig('parameters.png')
 
     
 
