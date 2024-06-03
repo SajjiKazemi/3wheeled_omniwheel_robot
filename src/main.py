@@ -40,7 +40,7 @@ def main():
 
     for _ in range(int(30/dt)):
         v, w, z = expanding_spiral_path(robot, sim.time)
-        sim.step(v, w, z)
+        sim.step(v, w, z, window_size=[-10, 10])
     
     # Plot the trajectory
     sim.plot()

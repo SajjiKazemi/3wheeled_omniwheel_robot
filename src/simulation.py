@@ -13,7 +13,7 @@ class Simulation:
         self.run = False
 
     
-    def step(self, v, w, z):
+    def step(self, v, w, z, window_size=[20, 20]):
         """
         Get the wheel rotation speeds for each wheel and pass
         them to the robot to update the pose.
@@ -22,7 +22,7 @@ class Simulation:
         self.time += self.dt
         self.history.append(self.robot.get_pose())
         if not self.run:
-            self.plot()
+            self.plot(window_size)
 
     def run(self, v, w, z, duration):
         """
@@ -34,12 +34,14 @@ class Simulation:
             self.step(v, w, z)
             self.plot()
     
-    def plot(self):
+    def plot(self, window_size):
+        axis_lower_lim = window_size[0]
+        axis_upper_lim = window_size[1]
         self.ax.cla()
         history = np.array(self.history)
         self.ax.plot(history[:, 0], history[:, 1], linewidth=2, color='red')
-        self.ax.set_xlim(-60, 60)
-        self.ax.set_ylim(-60, 60)
+        self.ax.set_xlim(axis_lower_lim, axis_upper_lim)
+        self.ax.set_ylim(axis_lower_lim, axis_upper_lim)
         #self.ax.axis('equal')
         self.ax.set_xlabel('x')
         self.ax.set_ylabel('y')
