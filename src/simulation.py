@@ -11,7 +11,7 @@ class Simulation:
         self.trajectory_fig = plt.figure()
         self.trajectory_ax = self.trajectory_fig.add_subplot(111)
         self.param_fig, self.param_axs = plt.subplots(3, 1, figsize=(8, 12))     
-        self.run = False
+        self.is_run = False
 
     
     def step(self, v, w, z, window_size=[20, 20]):
@@ -22,18 +22,18 @@ class Simulation:
         self.robot.step(v, w, z, self.dt)
         self.time += self.dt
         self.history.append(self.robot.get_pose())
-        if not self.run:
+        if not self.is_run:
             self.plot(window_size)
 
-    def run(self, v, w, z, duration):
+    def run(self, v, w, z, duration, window_size):
         """
         Run the simulation for a given duration with the given
         rotation speeds for each wheel.
         """
-        self.run = True
+        self.is_run = True
         for _ in range(int(duration / self.dt)):
-            self.step(v, w, z)
-            self.plot()
+            self.step(v, w, z, window_size)
+            self.plot(window_size)
     
     def plot(self, window_size):
         axis_lower_lim = window_size[0]
@@ -48,31 +48,29 @@ class Simulation:
         self.trajectory_ax.set_title('Robot Trajectory')
         self.trajectory_ax.legend(['Trajectory'])
 
+        self.plot_params()
+        self.plot_body()
+        plt.draw()
+        plt.pause(0.1)
+
+    def plot_params(self):
+        history = np.array(self.history)
         self.param_axs[0].cla()
         self.param_axs[0].plot(history[:, 0], linewidth=2, color='red')
-        self.param_axs[0].set_xlabel('Time')
         self.param_axs[0].set_ylabel('x')
-        self.param_axs[0].set_title('x vs Time')
+        self.param_axs[0].set_title('Robot Pose')
         self.param_axs[0].legend(['x'])
 
         self.param_axs[1].cla()
         self.param_axs[1].plot(history[:, 1], linewidth=2, color='blue')
-        self.param_axs[1].set_xlabel('Time')
         self.param_axs[1].set_ylabel('y')
-        self.param_axs[1].set_title('y vs Time')
         self.param_axs[1].legend(['y'])
 
         self.param_axs[2].cla()
         self.param_axs[2].plot(history[:, 2], linewidth=2, color='green')
-        self.param_axs[2].set_xlabel('Time')
+        self.param_axs[2].set_xlabel('Time  (in tenths of a second)')
         self.param_axs[2].set_ylabel('theta')
-        self.param_axs[2].set_title('theta vs Time')
         self.param_axs[2].legend(['theta'])
-
-        self.plot_body()
-        #plt.show()
-        plt.draw()
-        plt.pause(0.1)
 
     def plot_body(self):
         # Define the vertices of an equilateral triangle
@@ -105,6 +103,9 @@ class Simulation:
     def save(self, filename='trajectory.png'):
         self.trajectory_fig.savefig(filename)
         self.param_fig.savefig('parameters.png')
+        with open('trajectory.txt', 'w') as f:
+            for pose in self.history:
+                f.write(f'{pose[0]}\t{pose[1]}\t{pose[2]}\n')
 
     
 

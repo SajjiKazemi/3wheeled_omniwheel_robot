@@ -11,7 +11,7 @@ def sixty_degree_line_path(robot, time):
 def circle_path(robot, time):
     x_dot = -np.sin(time)
     y_dot = np.cos(time)
-    v, w, z = robot.find_wheel_speeds(x_dot, y_dot, 1)
+    v, w, z = robot.find_wheel_speeds(x_dot, y_dot, 0)
     return v, w, z
 
 def expanding_spiral_path(robot, time):
@@ -26,7 +26,7 @@ def main():
     
     # Create a simulation object
     sim = Simulation(robot)
-    duration = 30
+    duration = 10
     dt = 0.1
     
     # Run the simulation
@@ -36,13 +36,13 @@ def main():
     #     v, w, z = sixty_degree_line_path(robot, sim.time)
     #     sim.step(v, w, z, window_size=[-5, 55])
 
-    # for _ in range(int(duration/dt)):
-    #     v, w, z = circle_path(robot, sim.time)
-    #     sim.step(v, w, z, window_size=[-3, 3])
-
     for _ in range(int(duration/dt)):
-        v, w, z = expanding_spiral_path(robot, sim.time)
-        sim.step(v, w, z, window_size=[-35, 35])
+        v, w, z = circle_path(robot, sim.time)
+        sim.step(v, w, z, window_size=[-3, 3])
+
+    # for _ in range(int(duration/dt)):
+    #     v, w, z = expanding_spiral_path(robot, sim.time)
+    #     sim.step(v, w, z, window_size=[-35, 35])
     
     sim.save()
 
