@@ -21,6 +21,7 @@ class Robot:
         self.theta_dot, self.x_dot, self.y_dot = np.dot(self.H_inv, [v, w, z])
         
         self.theta += self.theta_dot * dt
+        self.theta = (self.theta + 2 * np.pi) % (4 * np.pi) - 2 * np.pi
         self.x += self.x_dot * dt
         self.y += self.y_dot * dt
     
