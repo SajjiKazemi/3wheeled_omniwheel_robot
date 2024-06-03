@@ -29,6 +29,7 @@ def main():
     
     # Run the simulation
     #sim.run(2, 0, 1, 30)
+    duration = 30
     dt = 0.1
     # for _ in range(int(30/dt)):
     #     v, w, z = sixty_degree_line_path(robot, sim.time)
@@ -38,12 +39,11 @@ def main():
     #     v, w, z = circle_path(robot, sim.time)
     #     sim.step(v, w, z)
 
-    for _ in range(int(30/dt)):
+    for _ in range(int(duration/dt)):
         v, w, z = expanding_spiral_path(robot, sim.time)
         sim.step(v, w, z, window_size=[-10, 10])
     
-    # Plot the trajectory
-    sim.plot()
+    sim.save()
 
 if __name__ == '__main__':
     main()
