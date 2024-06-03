@@ -24,5 +24,12 @@ class Robot:
         self.x += self.x_dot * dt
         self.y += self.y_dot * dt
     
+    def find_wheel_speeds(self, x_dot, y_dot, theta_dot):
+        """
+        Find the wheel speeds based on the robot's pose.
+        """
+        v, w, z = np.dot(self.H_matrix, [theta_dot, x_dot, y_dot])
+        return v, w, z
+    
     def get_pose(self):
         return self.x, self.y, self.theta
