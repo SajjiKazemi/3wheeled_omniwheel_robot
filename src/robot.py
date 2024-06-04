@@ -5,8 +5,8 @@ class Robot:
         self.x = x
         self.y = y
         self.theta = theta
-        self.wheel_radius = 0.1         # Radius of the wheels in meters
-        self.wheel_distance = 0.2       # Distance of wheel connectons to the centre of triangle in meters
+        self.wheel_radius = 0.10         # Radius of the wheels in meters
+        self.wheel_distance = 0.25       # Distance of wheel connectons to the centre of triangle in meters
         self.wheel_speeds = [0, 0, 0]
         self.H_matrix = (1/self.wheel_radius)*np.array([
             [-self.wheel_distance, 1, 0],
