@@ -8,6 +8,7 @@ class Simulation:
         self.dt = 0.1
         self.time = 0
         self.history = []
+        self.control_history = []
         self.trajectory_fig = plt.figure()
         self.trajectory_ax = self.trajectory_fig.add_subplot(111)
         self.param_fig, self.param_axs = plt.subplots(3, 1, figsize=(8, 12))     
@@ -20,6 +21,7 @@ class Simulation:
         them to the robot to update the pose.
         """
         self.robot.step(v, w, z, self.dt)
+        self.control_history.append([v, w, z])
         self.time += self.dt
         self.history.append(self.robot.get_pose())
         if not self.is_run:
@@ -106,6 +108,10 @@ class Simulation:
         with open('trajectory.txt', 'w') as f:
             for pose in self.history:
                 f.write(f'{pose[0]}\t{pose[1]}\t{pose[2]}\n')
+        
+        with open('controls.txt', 'w') as f:
+            for control in self.control_history:
+                f.write(f'{control[0]}\t{control[1]}\t{control[2]}\n')
 
     
 
